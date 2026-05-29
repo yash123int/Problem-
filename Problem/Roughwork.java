@@ -1,33 +1,54 @@
-import java.util.HashMap;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Roughwork {
     public static void main(String[] args){
-        int[] nums = {};
-        int target = 5;
+        Graph graph = new Graph(5);
 
-        int[] result = twoSum(nums, target);
+        graph.addEdge(0, 1);
+        graph.addEdge(0,2);
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 0);
+        graph.addEdge(2, 3);
+        graph.addEdge(3, 3);
+        graph.addEdge(4, 0);
+        graph.addEdge(4, 1);
 
-        System.out.println(Arrays.toString(result));
+        graph.printGraph();
     }
-
-    
-    static int[] twoSum(int[] nums, int target){
-        HashMap<Integer,Integer> map = new HashMap<>();
-
-        if(nums == null || nums.length < 2){
-            return new int[] {};
-        }
-
-        for(int i=0;i<nums.length;i++){
-            int complement = target - nums[i];
-
-            if(map.containsKey(complement)){
-                return new int[] {map.get(complement),i};
-            }
-            map.put(nums[i],i);
-        }
-        return new int[] {};
-    }
-
 }
+
+class Graph {
+    private int vertices;
+    private ArrayList<ArrayList<Integer>>adjlist;
+
+    //constructor
+    Graph(int vertices){
+        this.vertices = vertices;
+        adjlist = new ArrayList<>();
+
+        for(int i=0; i<vertices;i++){
+            adjlist.add(new ArrayList<>());
+        }
+    }
+
+    void addEdge(int source, int destination){
+        adjlist.get(source).add(destination);
+
+        //For undirected graphs
+        //adjlist.get(destination).add(source);
+    }
+
+    void printGraph(){
+        int i=0;
+        for(i=0;i<vertices;i++){
+            System.out.print(i+ "->");
+
+            for(Integer node: adjlist.get(i)){
+                System.out.print(node+ " ");
+            }
+            
+             System.out.println();
+        }
+    }
+}
+
