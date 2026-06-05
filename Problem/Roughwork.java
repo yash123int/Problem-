@@ -1,33 +1,41 @@
+
 public class Roughwork {
     public static void main(String[] args){
-        Node head = new Node(10);
-        Node second = new Node(20);
-        Node third = new Node(30);
-
-        head.next = second;
-        second.next = third;
-        
-        System.out.println("Linked List Element");
-        printlist(head);
-    }
-
-    public static void printlist(Node head){
-        Node current = head;
-
-        while(current != null){
-            System.out.print(current.data+ " -> ");
-            current = current.next;
-        }
-        System.out.println("null");
+        new RaceConditionDemo(); 
     }
 }
 
-class Node{
-    int data;
-    Node next;
+class RaceConditionDemo {
+    static int count=0;
+    static final Object lock = new Object();
 
-    public Node(int data){
-        this.data = data;
-        this.next = null;
+    Thread t1 = new Thread(() -> {
+        for(int i=0;i<1000000000;i++){
+            synchronized (lock) {
+               count++;
+            }
+        }
+    });
+
+    Thread t2 = new Thread(() -> {
+        for(int i=0;i<1000000000;i++){
+            synchronized (lock) {
+                count++;
+            }
+        }
+    });
+
+    public RaceConditionDemo() {
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Count: " + count);
     }
 }
